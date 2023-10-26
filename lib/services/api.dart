@@ -68,4 +68,22 @@ class Api {
       return null;
     }
   }
+
+  static Future<Response?> getProductDetail() async {
+    try {
+      final Response response =
+          await dio.get('/customer/dummy-item'.onEndPoint(),
+              options: Options(
+                contentType: 'application/json; charset=UTF-8',
+              ));
+      return response;
+    } on DioException catch (e) {
+      errorHandler(errorResponse: e.response);
+      developerLog(error: e);
+      return null;
+    } catch (e) {
+      developerLog(error: e);
+      return null;
+    }
+  }
 }
