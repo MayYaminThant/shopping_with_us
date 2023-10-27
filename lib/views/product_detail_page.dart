@@ -31,8 +31,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getProductDetail();
-      qty = context.read().shoppingCartItems[widget.item.id] != null
-          ? context.read().shoppingCartItems[widget.item.id]?.qty ?? 1
+      qty = context.read<OrderProvider>().shoppingCartItems[widget.item.id] !=
+              null
+          ? context
+                  .read<OrderProvider>()
+                  .shoppingCartItems[widget.item.id]
+                  ?.qty ??
+              1
           : 1;
       setState(() {});
     });
@@ -367,7 +372,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             child: Text(
-              (qty ?? 0).toString(),
+              (qty).toString(),
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 17.7,
@@ -386,8 +391,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         }),
         InkWell(
             onTap: () {
-              Item item = widget.item;
-              item.qty = qty;
               if (context
                       .read<OrderProvider>()
                       .shoppingCartItems[widget.item.id ?? ''] ==
@@ -395,7 +398,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 context
                     .read<OrderProvider>()
                     .shoppingCartItems
-                    .putIfAbsent(widget.item.id ?? '', () => item);
+                    .putIfAbsent(widget.item.id ?? '', () => widget.item);
+                context
+                    .read<OrderProvider>()
+                    .shoppingCartItems[widget.item.id ?? '']
+                    ?.qty = qty;
+              } else {
+                context
+                    .read<OrderProvider>()
+                    .shoppingCartItems[widget.item.id ?? '']
+                    ?.qty = qty;
               }
               context.read<OrderProvider>().notify();
             },

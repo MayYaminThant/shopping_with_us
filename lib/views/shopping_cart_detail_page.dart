@@ -55,7 +55,7 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
                   constraints: BoxConstraints(
                       minWidth: MediaQuery.of(context).size.width,
                       maxWidth: MediaQuery.of(context).size.width,
-                      minHeight: MediaQuery.of(context).size.height / 2.5,
+                      minHeight: MediaQuery.of(context).size.height / 2,
                       maxHeight: MediaQuery.of(context).size.height -
                           kToolbarHeight -
                           100),
@@ -113,7 +113,7 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
   Padding _eachProductWidget(String key, OrderProvider controller) {
     Item? e = controller.shoppingCartItems[key];
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
       child: SizedBox(
         height: 95,
         child: Row(
@@ -146,14 +146,14 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
                 ),
               ),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 4),
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 2.5),
+                      maxWidth: MediaQuery.of(context).size.width / 2.3),
                   child: Text(
                     e?.name ?? '',
                     maxLines: 2,
@@ -165,7 +165,7 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 6),
                 Text(
                   '${(e?.weight ?? 0).toString()} Grams',
                   // '250 Grams',
@@ -174,7 +174,7 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
                     fontSize: 12,
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 6),
                 Text(
                   '${(e?.price ?? 0).toString()} Ks',
                   // '2500 Ks',
@@ -186,7 +186,7 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
                 ),
               ],
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 2),
             Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -206,7 +206,6 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
                 ),
                 SizedBox(height: 8),
                 Container(
-                  // height: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     color: Colors.white,
@@ -247,14 +246,14 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
+                            horizontal: 3, vertical: 2),
                         child: Text(
                           (controller.shoppingCartItems[key]?.qty ?? 0)
                               .toString(),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 17.7,
+                            fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

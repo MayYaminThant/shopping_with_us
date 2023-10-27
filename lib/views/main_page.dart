@@ -402,7 +402,7 @@ class _MainPageState extends State<MainPage> {
                                       entry.value[index].images?.isNotEmpty ??
                                               false
                                           ? entry.value[index].images!.first
-                                                  .mediumImageUrl ??
+                                                  .largeImageUrl ??
                                               ''
                                           : '',
                                   width: 100,
