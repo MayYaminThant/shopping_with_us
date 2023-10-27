@@ -27,7 +27,10 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    _getDemoVendorData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<OrderProvider>().resetOrderProvider();
+      _getDemoVendorData();
+    });
     super.initState();
   }
 
@@ -45,6 +48,7 @@ class _MainPageState extends State<MainPage> {
           response.data != null) {
         try {
           _demoVendor = DemoVendor.fromJson(response.data);
+          context.read<OrderProvider>().userData = _demoVendor?.data;
           setState(() {});
         } catch (e) {
           log(e.toString());
@@ -270,8 +274,10 @@ class _MainPageState extends State<MainPage> {
                                 placeholder: (context, url) => SizedBox(
                                     width: 20,
                                     height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 1,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 1,
+                                      ),
                                     )),
                                 errorWidget: (_, __, ___) => Container(
                                   width: 100,
@@ -406,8 +412,10 @@ class _MainPageState extends State<MainPage> {
                                   placeholder: (context, url) => SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 1,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 1,
+                                        ),
                                       )),
                                   errorWidget: (_, __, ___) => Container(
                                     width: 100,

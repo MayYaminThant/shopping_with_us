@@ -16,7 +16,7 @@ extension OnEndPoint on String {
 }
 
 class Api {
-  static const String baseUrl = "http://52.221.92.136/api";
+  static const String baseUrl = "https://mp-stage.novasevenstars.com/api";
   static const String version1 = "/v1";
 
   static const String currentVersion = version1;

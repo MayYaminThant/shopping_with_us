@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_with_us/models/data.dart';
 
 import '../models/item.dart';
 
 class OrderProvider with ChangeNotifier {
-  // List<Item> _shoppingCartItems = [];
-  // List<Item> get shoppingCartItems => _shoppingCartItems;
+  Data? _userData;
+  Data? get userData => _userData;
 
-  // set shoppingCartItems(List<Item> shoppingCartItems) {
-  //   _shoppingCartItems = shoppingCartItems;
-  //   notifyListeners();
-  // }
+  set userData(Data? userData) {
+    if (_userData == userData) return;
+    _userData = userData;
+    notifyListeners();
+  }
 
   Map<String, Item> _shoppingCartItems = {};
   Map<String, Item> get shoppingCartItems => _shoppingCartItems;
@@ -24,6 +26,7 @@ class OrderProvider with ChangeNotifier {
   }
 
   resetOrderProvider() {
+    _userData = null;
     _shoppingCartItems = {};
     notifyListeners();
   }

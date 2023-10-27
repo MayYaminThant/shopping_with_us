@@ -138,27 +138,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       isLoop: (widget.item.images?.length ?? 0) > 1,
       children: widget.item.images
               ?.map(
-                (e) => Image.network(
-                  e.largeImageUrl ?? '',
+                (e) => CachedNetworkImage(
+                  imageUrl: e.largeImageUrl ?? '',
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  placeholder: (context, url) => SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1,
+                        ),
+                      )),
+                  errorWidget: (_, __, ___) => Container(
+                    width: double.infinity,
+                    height: 120,
+                    color: Colors.black,
+                  ),
                 ),
-                //     CachedNetworkImage(
-                //   imageUrl: e.largeImageUrl ?? '',
-                //   width: double.infinity,
-                //   fit: BoxFit.cover,
-                //   placeholder: (context, url) => SizedBox(
-                //       width: 20,
-                //       height: 20,
-                //       child: CircularProgressIndicator(
-                //         strokeWidth: 1,
-                //       )),
-                //   errorWidget: (_, __, ___) => Container(
-                //     width: double.infinity,
-                //     height: 120,
-                //     color: Colors.black,
-                //   ),
-                // ),
               )
               .toList() ??
           [],
@@ -181,7 +178,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
           SizedBox(height: 8),
           Text(
-            '${(widget.item.weight ?? 0).toString()} Gram',
+            '${(widget.item.weight ?? 0).toString()} Gramsd',
             style: TextStyle(
               color: Colors.black.withOpacity(0.6),
               fontSize: 15,
@@ -260,52 +257,65 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   itemCount: _productDetail!.relatedItems!.length,
                   itemBuilder: (_, index) {
                     // log('Image Url : ${_demoVendor?.itemTypes?[index].coverImage ?? ''}');
-                    return Container(
-                      width: 110,
-                      height: 80,
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: CachedNetworkImage(
-                                imageUrl: _productDetail!.relatedItems![index]
-                                            .images?.isNotEmpty ??
-                                        false
-                                    ? _productDetail!.relatedItems![index]
-                                            .images!.first.mediumImageUrl ??
-                                        ''
-                                    : '',
-                                width: 100,
-                                memCacheWidth: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 1,
-                                    )),
-                                errorWidget: (_, __, ___) => Container(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          ProductDetailPage.routeName,
+                          arguments: ProductDetailPage(
+                            item: _productDetail!.relatedItems![index],
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 110,
+                        height: 80,
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: CachedNetworkImage(
+                                  imageUrl: _productDetail!.relatedItems![index]
+                                              .images?.isNotEmpty ??
+                                          false
+                                      ? _productDetail!.relatedItems![index]
+                                              .images!.first.mediumImageUrl ??
+                                          ''
+                                      : '',
                                   width: 100,
+                                  memCacheWidth: 80,
                                   height: 80,
-                                  color: Colors.black,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 1,
+                                        ),
+                                      )),
+                                  errorWidget: (_, __, ___) => Container(
+                                    width: 100,
+                                    height: 80,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Text(
-                            _productDetail!.relatedItems![index].name ?? '',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.7),
-                              // fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                            Text(
+                              _productDetail!.relatedItems![index].name ?? '',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.7),
+                                // fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   }),
@@ -378,10 +388,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             onTap: () {
               Item item = widget.item;
               item.qty = qty;
-              context
-                  .read<OrderProvider>()
-                  .shoppingCartItems
-                  .putIfAbsent(widget.item.id ?? '', () => item);
+              if (context
+                      .read<OrderProvider>()
+                      .shoppingCartItems[widget.item.id ?? ''] ==
+                  null) {
+                context
+                    .read<OrderProvider>()
+                    .shoppingCartItems
+                    .putIfAbsent(widget.item.id ?? '', () => item);
+              }
+              context.read<OrderProvider>().notify();
             },
             child: Container(
               height: 50,

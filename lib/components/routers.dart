@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:shopping_with_us/views/check_out_page.dart';
+import 'package:shopping_with_us/views/order_success_page.dart';
 import 'package:shopping_with_us/views/product_detail_page.dart';
 import 'package:shopping_with_us/views/shopping_cart_detail_page.dart';
 
@@ -17,9 +19,12 @@ class Routers {
                   item: args.item,
                 ));
       case ShoppingCartDetailPage.routeName:
-        // final ShoppingCartDetailPage args = settings.arguments as ShoppingCartDetailPage;
         return MaterialPageRoute(
             builder: (context) => ShoppingCartDetailPage());
+      case CheckOutPage.routeName:
+        return MaterialPageRoute(builder: (context) => CheckOutPage());
+      case OrderSuccessPage.routeName:
+        return MaterialPageRoute(builder: (context) => OrderSuccessPage());
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(

@@ -17,7 +17,7 @@ class Item {
   String? itemCode;
   int? qty;
   int? price;
-  int? weight;
+  double? weight;
   double? weightByKg;
   int? isActive;
   int? isInstock;
@@ -82,7 +82,7 @@ class Item {
     itemCode = json['item_code'];
     qty = json['qty'];
     price = json['price'];
-    weight = json['weight'];
+    weight = double.tryParse(json['weight']?.toString() ?? '0');
     weightByKg = json['weight_by_kg'];
     isActive = json['is_active'];
     isInstock = json['is_instock'];
