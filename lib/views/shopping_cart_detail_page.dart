@@ -18,9 +18,11 @@ class ShoppingCartDetailPage extends StatefulWidget {
 class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBarWidget(),
-      body: _bodyWidget(),
+    return SafeArea(
+      child: Scaffold(
+        appBar: _appBarWidget(),
+        body: _bodyWidget(),
+      ),
     );
   }
 
@@ -40,73 +42,66 @@ class _ShoppingCartDetailPageState extends State<ShoppingCartDetailPage> {
   }
 
   Widget _bodyWidget() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
               elevation: 10,
               shadowColor: Colors.black38,
               color: Colors.white,
               surfaceTintColor: Colors.white,
-              child: Container(
-                  constraints: BoxConstraints(
-                      minWidth: MediaQuery.of(context).size.width,
-                      maxWidth: MediaQuery.of(context).size.width,
-                      minHeight: MediaQuery.of(context).size.height / 2,
-                      maxHeight: MediaQuery.of(context).size.height -
-                          kToolbarHeight -
-                          100),
-                  child: Consumer<OrderProvider>(builder: (_, controller, __) {
-                    return ListView.separated(
-                        itemBuilder: (_, index) {
-                          String key = controller.shoppingCartItems.keys
-                              .elementAt(index);
-                          return _eachProductWidget(key, controller);
-                        },
-                        separatorBuilder: (_, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Divider(
-                              thickness: 0.4,
-                              height: 1,
-                            ),
-                          );
-                        },
-                        itemCount: controller.shoppingCartItems.length);
-                  })),
+              child: Consumer<OrderProvider>(
+                builder: (_, controller, __) {
+                  return ListView.separated(
+                      itemBuilder: (_, index) {
+                        String key =
+                            controller.shoppingCartItems.keys.elementAt(index);
+                        return _eachProductWidget(key, controller);
+                      },
+                      separatorBuilder: (_, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Divider(
+                            thickness: 0.4,
+                            height: 1,
+                          ),
+                        );
+                      },
+                      itemCount: controller.shoppingCartItems.length);
+                },
+              ),
             ),
           ),
-          InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  CheckOutPage.routeName,
-                );
-              },
-              child: Container(
-                height: 50,
-                margin: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: ColorUtils.mainColor),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Center(
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(
-                        letterSpacing: 1,
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500),
-                  ),
+        ),
+        InkWell(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                CheckOutPage.routeName,
+              );
+            },
+            child: Container(
+              height: 50,
+              margin: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: ColorUtils.mainColor),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Center(
+                child: Text(
+                  'Continue',
+                  style: TextStyle(
+                      letterSpacing: 1,
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
                 ),
-              )),
-        ],
-      ),
+              ),
+            )),
+      ],
     );
   }
 

@@ -65,6 +65,10 @@ class Item {
     this.discountItems,
   });
 
+  static Item clone(Item other) {
+    return Item.fromJson(other.toJson());
+  }
+
   Item.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];

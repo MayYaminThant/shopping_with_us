@@ -15,6 +15,14 @@ class CheckOutPage extends StatefulWidget {
 }
 
 class _CheckOutPageState extends State<CheckOutPage> {
+  ValueNotifier<bool> applyCouponNotifier = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    applyCouponNotifier.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,21 +109,9 @@ class _CheckOutPageState extends State<CheckOutPage> {
           ),
         ),
         SizedBox(height: 16),
-        eachOrderSummaryInfoWidget(text: 'SubTotal', value: 0),
-        SizedBox(height: 8),
-        Divider(
-          height: 0.3,
-          thickness: 0.2,
-        ),
-        SizedBox(height: 8),
-        eachOrderSummaryInfoWidget(text: 'Tax and Fees', value: 0),
-        SizedBox(height: 8),
-        Divider(
-          height: 0.3,
-          thickness: 0.2,
-        ),
-        SizedBox(height: 8),
-        eachOrderSummaryInfoWidget(text: 'Delivery', value: 0),
+        eachOrderSummaryInfoWidget(
+            text: 'SubTotal',
+            value: context.read<OrderProvider>().getSubTotal()),
         SizedBox(height: 8),
         Divider(
           height: 0.3,
@@ -123,7 +119,29 @@ class _CheckOutPageState extends State<CheckOutPage> {
         ),
         SizedBox(height: 8),
         eachOrderSummaryInfoWidget(
-            text: 'Total', hintText: '(2 items)', value: 0),
+            text: 'Tax and Fees',
+            hintText: '(10%)',
+            value: context.read<OrderProvider>().getSubTotal() / 10),
+        SizedBox(height: 8),
+        Divider(
+          height: 0.3,
+          thickness: 0.2,
+        ),
+        SizedBox(height: 8),
+        eachOrderSummaryInfoWidget(text: 'Delivery', value: 1000),
+        SizedBox(height: 8),
+        Divider(
+          height: 0.3,
+          thickness: 0.2,
+        ),
+        SizedBox(height: 8),
+        eachOrderSummaryInfoWidget(
+            text: 'Total',
+            hintText:
+                '(${context.read<OrderProvider>().shoppingCartItems.length} item${context.read<OrderProvider>().shoppingCartItems.length > 1 ? 's' : ''})',
+            value: (context.read<OrderProvider>().getSubTotal() +
+                (context.read<OrderProvider>().getSubTotal() / 10) +
+                1000)),
       ],
     );
   }
@@ -200,21 +218,33 @@ class _CheckOutPageState extends State<CheckOutPage> {
               ),
             ),
             Expanded(child: SizedBox()),
-            SvgPicture.asset(
-              'assets/svgs/edit.svg',
-              width: 20,
+            InkWell(
+              onTap: () {
+                _editInfoDialogWidget('Delivery Address',
+                    context.read<OrderProvider>().userData?.address ?? '',
+                    (value) {
+                  context.read<OrderProvider>().userData?.address = value;
+                  context.read<OrderProvider>().notify();
+                });
+              },
+              child: SvgPicture.asset(
+                'assets/svgs/edit.svg',
+                width: 20,
+              ),
             ),
           ],
         ),
         SizedBox(height: 8),
-        Text(
-          context.read<OrderProvider>().userData?.address ?? '',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        Consumer<OrderProvider>(builder: (_, controller, __) {
+          return Text(
+            controller.userData?.address ?? '',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+          );
+        }),
       ],
     );
   }
@@ -275,27 +305,46 @@ class _CheckOutPageState extends State<CheckOutPage> {
                     ),
                   ),
                   Expanded(child: SizedBox()),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.black.withOpacity(0.8),
-                    size: 20,
+                  InkWell(
+                    onTap: () {
+                      _editInfoDialogWidget(
+                          'Delivery Note',
+                          context
+                                  .read<OrderProvider>()
+                                  .userData
+                                  ?.deliveryNote ??
+                              'Lorem ipsum dolor sit amet consectetur. Auctor turpis ac eu a purus quam.',
+                          (value) {
+                        context.read<OrderProvider>().userData?.deliveryNote =
+                            value;
+                        context.read<OrderProvider>().notify();
+                      });
+                    },
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black.withOpacity(0.8),
+                      size: 20,
+                    ),
                   )
                 ],
               ),
             ),
             SizedBox(height: 8),
-            Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width / 1.18),
-              child: Text(
-                'Lorem ipsum dolor sit amet consectetur. Auctor turpis ac eu a purus quam.',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
+            Consumer<OrderProvider>(builder: (_, controller, __) {
+              return Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width / 1.18),
+                child: Text(
+                  controller.userData?.deliveryNote ??
+                      'Lorem ipsum dolor sit amet consectetur. Auctor turpis ac eu a purus quam.',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ],
@@ -329,10 +378,25 @@ class _CheckOutPageState extends State<CheckOutPage> {
                     ),
                   ),
                   Expanded(child: SizedBox()),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.black.withOpacity(0.8),
-                    size: 20,
+                  InkWell(
+                    onTap: () {
+                      _editInfoDialogWidget(
+                          'Payment Method',
+                          context
+                                  .read<OrderProvider>()
+                                  .userData
+                                  ?.cashOnMethod ??
+                              'Cash On Delivery', (value) {
+                        context.read<OrderProvider>().userData?.cashOnMethod =
+                            value;
+                        context.read<OrderProvider>().notify();
+                      });
+                    },
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black.withOpacity(0.8),
+                      size: 20,
+                    ),
                   )
                 ],
               ),
@@ -342,7 +406,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width / 1.18),
               child: Text(
-                'Cash On Delivery',
+                context.read<OrderProvider>().userData?.cashOnMethod ??
+                    'Cash On Delivery',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 15,
@@ -379,10 +444,21 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 ),
               ),
               Expanded(child: SizedBox()),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.black.withOpacity(0.8),
-                size: 20,
+              InkWell(
+                onTap: () {
+                  _editApplyCouponDialogWidget(
+                      'Apply Coupon',
+                      context.read<OrderProvider>().userData?.applyCoupon ??
+                          false, (value) {
+                    context.read<OrderProvider>().userData?.applyCoupon = value;
+                    context.read<OrderProvider>().notify();
+                  });
+                },
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black.withOpacity(0.8),
+                  size: 20,
+                ),
               )
             ],
           ),
@@ -417,5 +493,206 @@ class _CheckOutPageState extends State<CheckOutPage> {
             ),
           ),
         ));
+  }
+
+  void _editInfoDialogWidget(
+    String title,
+    String? initialValue,
+    Function(String) callback,
+  ) {
+    String? messageString;
+    GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    showDialog(
+        builder: (bContext) => AlertDialog(
+              insetPadding: EdgeInsets.all(10),
+              contentPadding: EdgeInsets.all(2),
+              backgroundColor: Colors.white,
+              elevation: 0.3,
+              content: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            initialValue: initialValue,
+                            minLines: 2,
+                            maxLines: 5,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: ColorUtils.mainColor),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: ColorUtils.mainColor),
+                              ),
+                              hintText: "Update...",
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                            ),
+                            onSaved: (value) {
+                              messageString = value!;
+                            },
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            child: SizedBox(
+                              width: 80,
+                              child: Center(
+                                child: Text(
+                                  "Cancel",
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.7),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(bContext);
+                            },
+                          ),
+                          TextButton(
+                            child: SizedBox(
+                              width: 80,
+                              child: Center(
+                                child: Text(
+                                  "Update",
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    color: ColorUtils.mainColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                callback(messageString ?? '');
+                                Navigator.pop(bContext);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        context: context);
+  }
+
+  void _editApplyCouponDialogWidget(
+    String title,
+    bool initialValue,
+    Function(bool) callback,
+  ) {
+    applyCouponNotifier.value = initialValue;
+    showDialog(
+        builder: (bContext) => AlertDialog(
+              insetPadding: EdgeInsets.all(10),
+              contentPadding: EdgeInsets.all(2),
+              backgroundColor: Colors.white,
+              elevation: 0.3,
+              content: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ValueListenableBuilder<bool>(
+                          valueListenable: applyCouponNotifier,
+                          builder: (_, applyCoupon, __) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SwitchListTile(
+                                activeColor: ColorUtils.mainColor,
+                                title: Text(
+                                  title,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                value: applyCoupon,
+                                onChanged: (bool value) {
+                                  applyCouponNotifier.value = value;
+                                },
+                              ),
+                            );
+                          }),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            child: SizedBox(
+                              width: 80,
+                              child: Center(
+                                child: Text(
+                                  "Cancel",
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.7),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(bContext);
+                            },
+                          ),
+                          TextButton(
+                            child: SizedBox(
+                              width: 80,
+                              child: Center(
+                                child: Text(
+                                  "Update",
+                                  overflow: TextOverflow.clip,
+                                  style: TextStyle(
+                                    color: ColorUtils.mainColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              callback(applyCouponNotifier.value);
+                              Navigator.pop(bContext);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        context: context);
   }
 }

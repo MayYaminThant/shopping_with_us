@@ -19,26 +19,33 @@ class Data {
   String? logoImage;
   String? lat;
   String? lng;
+  String? deliveryNote;
+  String? cashOnMethod;
+  bool? applyCoupon;
 
-  Data(
-      {this.id,
-      this.name,
-      this.email,
-      this.username,
-      this.code,
-      this.mobile,
-      this.mainServiceId,
-      this.mainService,
-      this.km,
-      this.address,
-      this.orderOpeningTime,
-      this.orderClosingTime,
-      this.isActive,
-      this.isClosed,
-      this.coverImage,
-      this.logoImage,
-      this.lat,
-      this.lng});
+  Data({
+    this.id,
+    this.name,
+    this.email,
+    this.username,
+    this.code,
+    this.mobile,
+    this.mainServiceId,
+    this.mainService,
+    this.km,
+    this.address,
+    this.orderOpeningTime,
+    this.orderClosingTime,
+    this.isActive,
+    this.isClosed,
+    this.coverImage,
+    this.logoImage,
+    this.lat,
+    this.lng,
+    this.deliveryNote,
+    this.cashOnMethod,
+    this.applyCoupon,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];

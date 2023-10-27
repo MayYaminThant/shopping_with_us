@@ -21,6 +21,14 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  double getSubTotal() {
+    double subTotal = 0;
+    for (Item item in _shoppingCartItems.values) {
+      subTotal += ((item.qty ?? 0) * (item.price ?? 0));
+    }
+    return subTotal;
+  }
+
   notify() {
     notifyListeners();
   }

@@ -363,7 +363,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _productActionWidget(Icons.remove_rounded, () {
-          if (qty >= 1) {
+          if (qty > 1) {
             qty--;
             setState(() {});
           }
@@ -395,10 +395,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       .read<OrderProvider>()
                       .shoppingCartItems[widget.item.id ?? ''] ==
                   null) {
-                context
-                    .read<OrderProvider>()
-                    .shoppingCartItems
-                    .putIfAbsent(widget.item.id ?? '', () => widget.item);
+                context.read<OrderProvider>().shoppingCartItems.putIfAbsent(
+                    widget.item.id ?? '', () => Item.clone(widget.item));
                 context
                     .read<OrderProvider>()
                     .shoppingCartItems[widget.item.id ?? '']
