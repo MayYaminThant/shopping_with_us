@@ -25,10 +25,12 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBarWidget(),
-      body: _bodyWidget(),
-      bottomNavigationBar: _bottomNavWidget(),
+    return SafeArea(
+      child: Scaffold(
+        appBar: _appBarWidget(),
+        body: _bodyWidget(),
+        bottomNavigationBar: _bottomNavWidget(),
+      ),
     );
   }
 

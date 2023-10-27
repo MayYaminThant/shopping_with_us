@@ -10,6 +10,7 @@ import 'package:shopping_with_us/views/main_page.dart';
 import 'services/navigation_service.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }

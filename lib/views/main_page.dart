@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shopping_with_us/components/color_utils.dart';
 import 'package:shopping_with_us/models/demo_vendor.dart';
 import 'package:shopping_with_us/models/item.dart';
+import 'package:shopping_with_us/views/profile_page.dart';
 import 'package:shopping_with_us/views/shopping_cart_detail_page.dart';
 
 import '../provider/order_provider.dart';
@@ -59,10 +60,12 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _appBarWidget(),
-      body: _bodyWidget(),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: _appBarWidget(),
+        body: _bodyWidget(),
+      ),
     );
   }
 
@@ -71,7 +74,12 @@ class _MainPageState extends State<MainPage> {
       automaticallyImplyLeading: false,
       backgroundColor: ColorUtils.commonGrey,
       leading: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            ProfilePage.routeName,
+          );
+        },
         icon: Stack(
           children: [
             const Icon(

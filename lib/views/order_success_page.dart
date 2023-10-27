@@ -9,9 +9,11 @@ class OrderSuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _bodyWidget(context),
-      bottomNavigationBar: _bottomNavWidget(context),
+    return SafeArea(
+      child: Scaffold(
+        body: _bodyWidget(context),
+        bottomNavigationBar: _bottomNavWidget(context),
+      ),
     );
   }
 

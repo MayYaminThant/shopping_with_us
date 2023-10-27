@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_with_us/views/check_out_page.dart';
 import 'package:shopping_with_us/views/order_success_page.dart';
 import 'package:shopping_with_us/views/product_detail_page.dart';
+import 'package:shopping_with_us/views/profile_page.dart';
 import 'package:shopping_with_us/views/shopping_cart_detail_page.dart';
 
 import 'widgets.dart';
@@ -25,6 +26,8 @@ class Routers {
         return MaterialPageRoute(builder: (context) => CheckOutPage());
       case OrderSuccessPage.routeName:
         return MaterialPageRoute(builder: (context) => OrderSuccessPage());
+      case ProfilePage.routeName:
+        return MaterialPageRoute(builder: (context) => ProfilePage());
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(
